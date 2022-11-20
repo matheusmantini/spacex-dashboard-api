@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { CreateLaunchDto } from './dto/create-launch.dto';
-import { UpdateLaunchDto } from './dto/update-launch.dto';
-import { Launch } from './entities/launch.entity';
 
 @Injectable()
 export class LaunchesService {
@@ -12,7 +9,20 @@ export class LaunchesService {
     return launches.data;
   }
 
-  async findAllPageSearch(body: Launch, search:string, limit:string) {
+  async findAllPageSearch(search:string, limit:number) {
+
+    const body = {
+      "query":{
+        "name": {
+          "$regex": `(?i)^${search}`
+        }
+      },
+      "options":{
+         "pagination": true,
+          "limit": limit
+      }
+   }
+
     const launches = await axios.post(
       `https://api.spacexdata.com/v5/launches/query?`,
       body,
