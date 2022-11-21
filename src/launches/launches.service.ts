@@ -9,25 +9,30 @@ export class LaunchesService {
     return launches.data;
   }
 
-  async findAllPageSearch(search:string, limit:number) {
+  async findAllPageSearch(search: string, limit: number) {
+    if (search && limit) {
+      const body = {
+        query: {
+          name: {
+            $regex: `(?i)^${search}`,
+          },
+        },
+        options: {
+          pagination: true,
+          limit: limit,
+        },
+      };
 
-    const body = {
-      "query":{
-        "name": {
-          "$regex": `(?i)^${search}`
-        }
-      },
-      "options":{
-         "pagination": true,
-          "limit": limit
-      }
-   }
-
-    const launches = await axios.post(
-      `https://api.spacexdata.com/v5/launches/query?`,
-      body,
-    );
-
-    return launches.data;
+      const launches = await axios.post(
+        `https://api.spacexdata.com/v5/launches/query?`,
+        body,
+      );
+      return launches.data;
+    } else {
+      const launches = await axios.get(
+        'https://api.spacexdata.com/v5/launches',
+      );
+      return launches.data;
+    }
   }
 }
