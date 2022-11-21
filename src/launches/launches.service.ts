@@ -27,7 +27,17 @@ export class LaunchesService {
         `https://api.spacexdata.com/v5/launches/query?`,
         body,
       );
-      return launches.data;
+
+      const result = {
+        results: launches.data.docs,
+        totalDocs: launches.data.totalDocs,
+        page: launches.data.page,
+        totalPages: launches.data.totalPages,
+        hasNext: launches.data.hasNextPage,
+        hasPrev: launches.data.hasPrevPage,
+      };
+
+      return result;
     } else {
       const launches = await axios.get(
         'https://api.spacexdata.com/v5/launches',
