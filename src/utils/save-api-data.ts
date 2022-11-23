@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as fs from 'fs';
 import { MongoClient } from 'mongodb';
 
 export const saveApiDataToDB = async () => {
