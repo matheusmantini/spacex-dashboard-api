@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { MongoClient } from 'mongodb';
 
 @Injectable()
@@ -9,17 +8,27 @@ export class LaunchesService {
     'mongodb+srv://matheusmantini:f4e8a6a2@cluster0.3olru4h.mongodb.net/?retryWrites=true&w=majority';
   client = new MongoClient(this.uri);
   db = this.client.db('launches');
-  coll = this.db.collection('launches');
+  collLaunches = this.db.collection('launches');
+  collRockets = this.db.collection('rockets');
 
   async findAll() {
     try {
       await this.client.connect();
 
       // get all results from mongoDB
+      const rocketsList = [];
+      await this.collRockets.find().forEach((rocket) => {
+        delete rocket._id;
+        rocketsList.push(rocket);
+      });
+
       const launchesList = [];
-      await this.coll.find().forEach((launch) => {
+      await this.collLaunches.find().forEach((launch) => {
         delete launch._id;
-        /* launch['rocket_name'] = rocketsInLaunches.data. */
+
+        const rocketInfo = rocketsList.find(({ id }) => id === launch.rocket);
+        launch['rocket_name'] = rocketInfo.name;
+
         launchesList.push(launch);
       });
 
@@ -35,7 +44,7 @@ export class LaunchesService {
         await this.client.connect();
 
         const launchesList = [];
-        await this.coll
+        await this.collLaunches
           .find({
             name: {
               $regex: `(?i)^${search}`,
