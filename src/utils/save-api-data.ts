@@ -1,7 +1,5 @@
 import axios from 'axios';
 import * as fs from 'fs';
-import { MongoClient } from 'mongodb';
-import * as apiData from '../data/launch-data.json';
 
 export const saveApiDataToJson = async () => {
   const launches = await axios.get(`https://api.spacexdata.com/v5/launches`);

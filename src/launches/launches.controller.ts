@@ -12,6 +12,6 @@ export class LaunchesController {
 
   @Get('/stats')
   findAllStats() {
-    return this.launchesService.findAllStats();
+    return this.launchesService.findAll();
   }
 }
