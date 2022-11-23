@@ -45,4 +45,35 @@ export class LaunchesService {
       return launches.data;
     }
   }
+
+  async findAllStats() {
+    const bodySuccess = {
+      query: {
+        success: true,
+      },
+      options: {},
+    };
+
+    const bodyFailure = {
+      query: {
+        success: false,
+      },
+      options: {},
+    };
+
+    const launchesSuccess = await axios.post(
+      `https://api.spacexdata.com/v5/launches/query`,
+      bodySuccess,
+    );
+
+    const launchesFailure = await axios.post(
+      `https://api.spacexdata.com/v5/launches/query`,
+      bodyFailure,
+    );
+
+    return {
+      success: launchesSuccess.data.totalDocs,
+      failure: launchesFailure.data.totalDocs,
+    };
+  }
 }

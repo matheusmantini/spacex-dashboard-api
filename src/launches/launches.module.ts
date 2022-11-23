@@ -4,6 +4,6 @@ import { LaunchesController } from './launches.controller';
 
 @Module({
   controllers: [LaunchesController],
-  providers: [LaunchesService]
+  providers: [LaunchesService],
 })
 export class LaunchesModule {}
