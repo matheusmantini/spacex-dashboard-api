@@ -18,9 +18,6 @@ export const dailyCron = () => {
         const db = client.db('launches');
         const coll = db.collection('launches');
 
-        const rocketsInLaunches = await coll.distinct('rocket');
-        console.log('rocketsInLaunches', rocketsInLaunches);
-
         // get all results from mongoDB
         const launchesList = [];
         const launchesDBId = [];
