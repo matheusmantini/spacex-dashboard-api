@@ -15,7 +15,7 @@ export class LaunchesController {
   }
 
   @Get('/stats')
-  findAllStats() {
-    return this.launchesService.findAll();
+  findAllRocketLaunchAndStats() {
+    return this.launchesService.findAllRocketLaunchAndStats();
   }
 }

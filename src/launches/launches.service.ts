@@ -28,6 +28,7 @@ export class LaunchesService {
 
         const rocketInfo = rocketsList.find(({ id }) => id === launch.rocket);
         launch['rocket_name'] = rocketInfo.name;
+        launch['year'] = launch.date_utc.slice(0, 4);
 
         launchesList.push(launch);
       });
@@ -94,8 +95,9 @@ export class LaunchesService {
             const rocketInfo = rocketsList.find(
               ({ id }) => id === launch.rocket,
             );
-            
+
             launch['rocket_name'] = rocketInfo.name;
+            launch['year'] = launch.date_utc.slice(0, 4);
             launchesListPerPage.push(launch);
           });
 
@@ -115,5 +117,44 @@ export class LaunchesService {
     }
   }
 
-  async findAllStats() {}
+  async findAllRocketLaunchAndStats() {
+    const allLaunches = await this.findAll();
+
+    let rocketsLaunch = [];
+    let rocketsLaunchByYear = [];
+    let rocketsLaunchResult = {};
+    let successCount = 0;
+    let failureCount = 0;
+    
+    for (let i = 0; i < allLaunches.length; i++) {
+      if (allLaunches[i].success !== null) {
+        rocketsLaunch.push(allLaunches[i].rocket_name);
+        rocketsLaunchByYear.push({
+          rocket: allLaunches[i].rocket_name,
+          year: allLaunches[i].year,
+        });
+        allLaunches[i].success === true
+          ? (successCount += 1)
+          : (failureCount += 1);
+      }
+    }
+    rocketsLaunch.forEach((element) => {
+      rocketsLaunchResult[element] = (rocketsLaunchResult[element] || 0) + 1;
+    });
+
+    const rocketsLaunchByYearResult = Object.values(
+      rocketsLaunchByYear.reduce((r, e) => {
+        let k = `${e.rocket}|${e.year}`;
+        if (!r[k]) r[k] = { ...e, count: 1 };
+        else r[k].count += 1;
+        return r;
+      }, {}),
+    );
+
+    rocketsLaunchResult['success'] = successCount;
+    rocketsLaunchResult['failure'] = failureCount;
+    rocketsLaunchResult['launch_by_year'] = rocketsLaunchByYearResult;
+
+    return rocketsLaunchResult;
+  }
 }
