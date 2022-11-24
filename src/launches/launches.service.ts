@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 
 @Injectable()
@@ -38,12 +38,47 @@ export class LaunchesService {
     }
   }
 
-  async findAllPageSearch(search: string, limit: number) {
+  async findAllPageSearch(search: string, limit: number, page: number) {
     if (search && limit) {
       try {
         await this.client.connect();
 
-        const launchesList = [];
+        const launchesListPerPage = [];
+        const totalLaunches = [];
+        const rocketsList = [];
+
+        await this.collRockets.find().forEach((rocket) => {
+          delete rocket._id;
+          rocketsList.push(rocket);
+        });
+
+        await this.collLaunches
+          .find({
+            name: {
+              $regex: `(?i)^${search}`,
+            },
+          })
+          .forEach((launch) => {
+            delete launch._id;
+
+            const rocketInfo = rocketsList.find(
+              ({ id }) => id === launch.rocket,
+            );
+            launch['rocket_name'] = rocketInfo.name;
+
+            totalLaunches.push(launch);
+          });
+
+        const totalDocs = totalLaunches.length;
+        let pageValue = +page || 1;
+        const totalPages = Math.ceil(totalLaunches.length / limit);
+        const hasNext = totalPages - +page > 0 ? true : false;
+        const hasPrev = +page - 1 === 0 ? false : true;
+
+        if (+page === 0 || page > totalPages) {
+          throw new BadRequestException('A página informada não existe');
+        }
+
         await this.collLaunches
           .find({
             name: {
@@ -51,22 +86,27 @@ export class LaunchesService {
             },
           })
           .sort({ _id: -1 })
+          .skip(+limit * pageValue - +limit)
           .limit(+limit)
           .forEach((launch) => {
             delete launch._id;
-            launchesList.push(launch);
+
+            const rocketInfo = rocketsList.find(
+              ({ id }) => id === launch.rocket,
+            );
+            
+            launch['rocket_name'] = rocketInfo.name;
+            launchesListPerPage.push(launch);
           });
 
-        const result = {
-          results: launchesList,
-          totalDocs: launchesList.length,
-          page: null,
-          totalPages: limit % launchesList.length,
-          hasNext: null,
-          hasPrev: null,
+        return {
+          results: launchesListPerPage,
+          totalDocs: totalDocs,
+          page: pageValue,
+          totalPages: totalPages,
+          hasNext: hasNext,
+          hasPrev: hasPrev,
         };
-
-        return result;
       } finally {
         await this.client.close();
       }
