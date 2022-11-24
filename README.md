@@ -9,7 +9,7 @@
 
     
 <p align="center">> Status do Projeto: Concluído :heavy_check_mark:</p>
-<p align="center">> Challenge by Coodesh</p>
+<h6 align="center"> <i>Challenge by Coodesh</i></h6>
     
 ## Funcionalidades
 
