@@ -1,15 +1,14 @@
 import axios from 'axios';
 import { MongoClient } from 'mongodb';
+import { MONGO_URI } from 'src/env';
 
 export const saveApiDataToDB = async () => {
   const launchesApi = await axios.get(`https://api.spacexdata.com/v5/launches`);
   const rocketsApi = await axios.get(`https://api.spacexdata.com/v4/rockets`);
 
   // mongoDB connection
-  const uri =
-    'mongodb+srv://matheusmantini:f4e8a6a2@cluster0.3olru4h.mongodb.net/?retryWrites=true&w=majority';
-  const clientLaunches = new MongoClient(uri);
-  const clientRockets = new MongoClient(uri);
+  const clientLaunches = new MongoClient(MONGO_URI);
+  const clientRockets = new MongoClient(MONGO_URI);
 
   // operations in mongoDB Database Rockets
   async function runDBLaunches() {

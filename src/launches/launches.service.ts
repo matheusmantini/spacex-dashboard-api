@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
+import { MONGO_URI } from 'src/env';
 
 @Injectable()
 export class LaunchesService {
   // MongoDB
-  uri =
-    'mongodb+srv://matheusmantini:f4e8a6a2@cluster0.3olru4h.mongodb.net/?retryWrites=true&w=majority';
-  client = new MongoClient(this.uri);
+  client = new MongoClient(MONGO_URI);
   db = this.client.db('launches');
   collLaunches = this.db.collection('launches');
   collRockets = this.db.collection('rockets');

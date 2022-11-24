@@ -1,15 +1,14 @@
 import * as cron from 'node-cron';
 import axios from 'axios';
 import { MongoClient } from 'mongodb';
+import { MONGO_URI } from 'src/env';
 
 export const dailyCron = () => {
   cron.schedule('00 00 09 * * *', async () => {
     const launches = await axios.get(`https://api.spacexdata.com/v5/launches`);
 
     // mongoDB connection
-    const uri =
-      'mongodb+srv://matheusmantini:f4e8a6a2@cluster0.3olru4h.mongodb.net/?retryWrites=true&w=majority';
-    const client = new MongoClient(uri);
+    const client = new MongoClient(MONGO_URI);
 
     // operations in mongoDB
     async function runDB() {
