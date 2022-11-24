@@ -1,12 +1,13 @@
 <h1 align="center"> Projeto SpaceX Dashboard - Back-end </h1>
-
+<div align="center">
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Node](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![NestJS](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
 ![REST](https://img.shields.io/badge/REST%20API-%231572B6.svg?style=for-the-badge)
-
+</div>
+    
 <p align="center">> Status do Projeto: Concluído :heavy_check_mark:</p>
 <p align="center">> Challenge by Coodesh</p>
     
