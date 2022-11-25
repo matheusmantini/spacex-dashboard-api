@@ -41,6 +41,14 @@ export class LaunchesService {
           launch['rocket_name'] = rocketInfo.name;
         }
 
+        if(launch.success === true){
+          launch['status'] = 'success';
+        } else if(launch.success === false){
+          launch['status'] = 'failure';
+        } else {
+          launch['status'] = 'none';
+        }
+
         launch['year'] = launch.date_utc.slice(0, 4);
 
         launchesList.push(launch);
@@ -120,7 +128,15 @@ export class LaunchesService {
             } else {
               launch['rocket_name'] = rocketInfo.name;
             }
-            
+
+            if(launch.success === true){
+              launch['status'] = 'success';
+            } else if(launch.success === false){
+              launch['status'] = 'failure';
+            } else {
+              launch['status'] = 'none';
+            }
+
             launch['year'] = launch.date_utc.slice(0, 4);
             launchesListPerPage.push(launch);
           });
