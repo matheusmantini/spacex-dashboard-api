@@ -183,11 +183,11 @@ export class LaunchesService {
     });
 
     const rocketsLaunchByYearResult = Object.values(
-      rocketsLaunchByYear.reduce((r, e) => {
-        let k = `${e.rocket}|${e.year}`;
-        if (!r[k]) r[k] = { ...e, count: 1 };
-        else r[k].count += 1;
-        return r;
+      rocketsLaunchByYear.reduce((acc, cur) => {
+        let rocket = `${cur.rocket}|${cur.year}`;
+        if (!acc[rocket]) acc[rocket] = { ...cur, count: 1 };
+        else acc[rocket].count += 1;
+        return acc;
       }, {}),
     );
 
