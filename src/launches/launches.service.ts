@@ -37,10 +37,10 @@ export class LaunchesService {
           launch.rocket === '5e9d0d95eda69973a809d1ec'
         ) {
           launch['rocket_name'] = `New ${rocketInfo.name}`;
-        }else{
+        } else {
           launch['rocket_name'] = rocketInfo.name;
         }
-        
+
         launch['year'] = launch.date_utc.slice(0, 4);
 
         launchesList.push(launch);
@@ -53,13 +53,19 @@ export class LaunchesService {
   }
 
   async findAllPageSearch(search: string, limit: number, page: number) {
-    if (search && limit) {
+    if ((search && limit && page) || (limit && page)) {
       try {
         await this.client.connect();
 
         const launchesListPerPage = [];
         const totalLaunches = [];
         const rocketsList = [];
+        const findWithNoSearch = {};
+        const findWithSearch = {
+          name: {
+            $regex: `(?i)^${search}`,
+          },
+        };
 
         await this.collRockets.find().forEach((rocket) => {
           delete rocket._id;
@@ -67,31 +73,14 @@ export class LaunchesService {
         });
 
         await this.collLaunches
-          .find({
-            name: {
-              $regex: `(?i)^${search}`,
-            },
-          })
+          .find(search ? findWithSearch : findWithNoSearch)
           .forEach((launch) => {
             delete launch._id;
 
             const rocketInfo = rocketsList.find(
               ({ id }) => id === launch.rocket,
             );
-
-            if (
-              launch.cores[0].reused === true &&
-              launch.rocket === '5e9d0d95eda69973a809d1ec'
-            ) {
-              launch['rocket_name'] = `Used ${rocketInfo.name}`;
-            } else if (
-              launch.cores[0].reused === false &&
-              launch.rocket === '5e9d0d95eda69973a809d1ec'
-            ) {
-              launch['rocket_name'] = `New ${rocketInfo.name}`;
-            }else{
-              launch['rocket_name'] = rocketInfo.name;
-            }
+            launch['rocket_name'] = rocketInfo.name;
 
             totalLaunches.push(launch);
           });
@@ -107,11 +96,7 @@ export class LaunchesService {
         }
 
         await this.collLaunches
-          .find({
-            name: {
-              $regex: `(?i)^${search}`,
-            },
-          })
+          .find(search ? findWithSearch : findWithNoSearch)
           .sort({ _id: -1 })
           .skip(+limit * pageValue - +limit)
           .limit(+limit)
@@ -132,10 +117,9 @@ export class LaunchesService {
               launch.rocket === '5e9d0d95eda69973a809d1ec'
             ) {
               launch['rocket_name'] = `New ${rocketInfo.name}`;
-            } else{
-              
+            } else {
+              launch['rocket_name'] = rocketInfo.name;
             }
-
             
             launch['year'] = launch.date_utc.slice(0, 4);
             launchesListPerPage.push(launch);
