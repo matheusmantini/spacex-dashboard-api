@@ -26,7 +26,21 @@ export class LaunchesService {
         delete launch._id;
 
         const rocketInfo = rocketsList.find(({ id }) => id === launch.rocket);
-        launch['rocket_name'] = rocketInfo.name;
+
+        if (
+          launch.cores[0].reused === true &&
+          launch.rocket === '5e9d0d95eda69973a809d1ec'
+        ) {
+          launch['rocket_name'] = `Used ${rocketInfo.name}`;
+        } else if (
+          launch.cores[0].reused === false &&
+          launch.rocket === '5e9d0d95eda69973a809d1ec'
+        ) {
+          launch['rocket_name'] = `New ${rocketInfo.name}`;
+        }else{
+          launch['rocket_name'] = rocketInfo.name;
+        }
+        
         launch['year'] = launch.date_utc.slice(0, 4);
 
         launchesList.push(launch);
@@ -64,7 +78,20 @@ export class LaunchesService {
             const rocketInfo = rocketsList.find(
               ({ id }) => id === launch.rocket,
             );
-            launch['rocket_name'] = rocketInfo.name;
+
+            if (
+              launch.cores[0].reused === true &&
+              launch.rocket === '5e9d0d95eda69973a809d1ec'
+            ) {
+              launch['rocket_name'] = `Used ${rocketInfo.name}`;
+            } else if (
+              launch.cores[0].reused === false &&
+              launch.rocket === '5e9d0d95eda69973a809d1ec'
+            ) {
+              launch['rocket_name'] = `New ${rocketInfo.name}`;
+            }else{
+              launch['rocket_name'] = rocketInfo.name;
+            }
 
             totalLaunches.push(launch);
           });
@@ -95,7 +122,21 @@ export class LaunchesService {
               ({ id }) => id === launch.rocket,
             );
 
-            launch['rocket_name'] = rocketInfo.name;
+            if (
+              launch.cores[0].reused === true &&
+              launch.rocket === '5e9d0d95eda69973a809d1ec'
+            ) {
+              launch['rocket_name'] = `Used ${rocketInfo.name}`;
+            } else if (
+              launch.cores[0].reused === false &&
+              launch.rocket === '5e9d0d95eda69973a809d1ec'
+            ) {
+              launch['rocket_name'] = `New ${rocketInfo.name}`;
+            } else{
+              
+            }
+
+            
             launch['year'] = launch.date_utc.slice(0, 4);
             launchesListPerPage.push(launch);
           });
@@ -124,7 +165,7 @@ export class LaunchesService {
     let rocketsLaunchResult = {};
     let successCount = 0;
     let failureCount = 0;
-    
+
     for (let i = 0; i < allLaunches.length; i++) {
       if (allLaunches[i].success !== null) {
         rocketsLaunch.push(allLaunches[i].rocket_name);
