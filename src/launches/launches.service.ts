@@ -41,9 +41,9 @@ export class LaunchesService {
           launch['rocket_name'] = rocketInfo.name;
         }
 
-        if(launch.success === true){
+        if (launch.success === true) {
           launch['status'] = 'success';
-        } else if(launch.success === false){
+        } else if (launch.success === false) {
           launch['status'] = 'failure';
         } else {
           launch['status'] = 'none';
@@ -55,8 +55,9 @@ export class LaunchesService {
       });
 
       return launchesList;
-    } finally {
+    } catch (error) {
       await this.client.close();
+      throw new Error(error);
     }
   }
 
@@ -72,7 +73,7 @@ export class LaunchesService {
         const findWithSearch = {
           name: {
             $regex: `(?i)^${search}`,
-          },
+          }
         };
 
         await this.collRockets.find().forEach((rocket) => {
@@ -100,7 +101,7 @@ export class LaunchesService {
         const hasPrev = +page - 1 === 0 ? false : true;
 
         if (+page === 0 || page > totalPages) {
-          throw new BadRequestException('A página informada não existe');
+          return [];
         }
 
         await this.collLaunches
@@ -129,9 +130,9 @@ export class LaunchesService {
               launch['rocket_name'] = rocketInfo.name;
             }
 
-            if(launch.success === true){
+            if (launch.success === true) {
               launch['status'] = 'success';
-            } else if(launch.success === false){
+            } else if (launch.success === false) {
               launch['status'] = 'failure';
             } else {
               launch['status'] = 'none';
@@ -149,8 +150,9 @@ export class LaunchesService {
           hasNext: hasNext,
           hasPrev: hasPrev,
         };
-      } finally {
+      } catch (error) {
         await this.client.close();
+        throw new Error(error);
       }
     } else {
       return this.findAll();
