@@ -468,23 +468,6 @@
                   }
                 }
               }
-            },
-            "404": {
-              "description": "É retornado quando um produto não é encontrado",
-              "content": {
-                "application/json": {
-                  "examples": {
-                    "Error": {
-                      "summary": "Error",
-                      "value": {
-                        "statusCode": 404,
-                        "message": "product with id '101' not found",
-                        "error": "Not Found"
-                      }
-                    }
-                  }
-                }
-              }
             }
           }
         }
